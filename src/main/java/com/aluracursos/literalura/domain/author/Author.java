@@ -1,25 +1,31 @@
 package com.aluracursos.literalura.domain.author;
 
 import com.aluracursos.literalura.domain.book.Book;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "Author")
+@Entity
 @Table(name = "authors")
-public class Author {
+public class Author implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Integer birthDate;
     private Integer deathDate;
+//    @JsonIgnore
+    @JsonBackReference
     @ManyToMany(mappedBy = "authors")
     private List<Book> books;
 
     public Author() {}
 
-    public Author(DataAuthor dataAuthor) {
+    public Author(
+            DataAuthor dataAuthor) {
         this.name = dataAuthor.name();
         this.birthDate = dataAuthor.birthDate();
         this.deathDate = dataAuthor.deathDate();

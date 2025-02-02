@@ -5,7 +5,6 @@ import com.aluracursos.literalura.domain.book.Book;
 import com.aluracursos.literalura.domain.book.DataBook;
 import com.aluracursos.literalura.repository.AuthorRepository;
 import com.aluracursos.literalura.repository.BookRepository;
-import com.aluracursos.literalura.service.features.ApiUse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,8 @@ public class WebSearchService {
     private AuthorRepository authorRepository;
 
     @Autowired
-    @Qualifier("apiUse")
-    private ApiUse apiUse;
+    @Qualifier("apiuse")
+    private ExternalApiService externalApiService;
 
 
     /**
@@ -38,7 +37,7 @@ public class WebSearchService {
      */
     public Optional<Book> webSearchAndSave(String bookName) {
         // Consumir API y obtener los datos del libro
-        DataBook dataBook = apiUse.apiProcessedConsuption(bookName);
+        DataBook dataBook = externalApiService.apiProcessedConsuption(bookName);
         if (dataBook == null) {
             return Optional.empty();
         }
@@ -72,6 +71,4 @@ public class WebSearchService {
         Book savedBook = bookRepository.save(newBook);
         return Optional.of(savedBook);
     }
-//    --------------------------------------------------------------------
-
 }

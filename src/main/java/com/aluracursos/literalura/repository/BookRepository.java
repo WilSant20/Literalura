@@ -1,32 +1,46 @@
-package com.aluracursos.literalura.domain.book;
+package com.aluracursos.literalura.repository;
 
+import com.aluracursos.literalura.domain.author.Author;
+import com.aluracursos.literalura.domain.author.DataAuthor;
+import com.aluracursos.literalura.domain.book.Book;
+import com.aluracursos.literalura.domain.book.DataBook;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Repository("bookrepository")
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findByTitleContainsIgnoreCase(String bookName);
+    boolean existsByTitle(String bookname);
 
-    List<Book> findTop10ByOrderByDownloadCountDesc();
+//    @Override
+    Page<Book> findAll(Pageable pageable);
 
-    @Query("SELECT b FROM Book b JOIN b.authors a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', ?1, '%'))")
-    List<Book> findByAuthorsByAuthorName(String authorName);
+    Page<Book> findByTitleContainsIgnoreCase(Pageable pageable, String bookName);
+
+
+    Page<Book> findTop10ByOrderByDownloadCountDesc(Pageable pageable);
+
+    @Query("SELECT b FROM Book b INNER JOIN b.authors a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', ?1, '%'))")
+    Page<Book> findByAuthorsByAuthorName(Pageable pageable, String authorName);
 
     @Query("SELECT b FROM Book b Join b.authors a WHERE a.birthDate <= :endDate AND (a.deathDate IS NULL OR a.deathDate >= :startDate)")
-    List<Book> findByAuthorLive(Integer startDate, Integer endDate);
+    Page<Book> findByAuthorLife(Pageable pageable, Integer startDate, Integer endDate);
 
     @Query("SELECT b FROM Book b WHERE LOWER(b.languages) LIKE LOWER(?1)")
-    List<Book> findByLanguages(String language);
+    Page<Book> findByLanguages(Pageable pageable, String language);
 
 
     @Query("SELECT b FROM Book b JOIN b.subjects s WHERE LOWER(s) LIKE LOWER(CONCAT('%', :subject, '%'))")
-    List<Book> findByTopics(String subject);
+    Page<Book> findByTopics(Pageable pageable, String subject);
 
-    List<Book> findByCopyrightIs(Boolean option);
+    Page<Book> findByCopyrightIs(Pageable pageable, Boolean option);
+
+    Page<Author> findByAuthors(Pageable pageable, Author author);
 
 
 }

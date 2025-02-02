@@ -1,33 +1,31 @@
 package com.aluracursos.literalura.domain.book;
 
 import com.aluracursos.literalura.domain.author.Author;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity(name = "Book")
 @Table(name = "books")
-public class Book {
+public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id"))
-    @BatchSize(size = 10)
+    @JsonManagedReference
     private List<Author> authors;
     @ElementCollection
     private List<String> subjects;
     @Enumerated(EnumType.STRING)
     private Languages languages;
-    private boolean copyright;
+    private Boolean copyright;
     private Integer downloadCount;
 
     public Book() {}
@@ -42,9 +40,14 @@ public class Book {
         this.downloadCount = dataBook.downloadCount();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
+
 
     public void setTitle(String title) {
         this.title = title;

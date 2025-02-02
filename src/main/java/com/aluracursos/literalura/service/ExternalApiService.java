@@ -1,7 +1,8 @@
-package com.aluracursos.literalura.service.features;
+package com.aluracursos.literalura.service;
 
 import com.aluracursos.literalura.domain.book.DataBook;
-import com.aluracursos.literalura.utils.DataMapper;
+import com.aluracursos.literalura.utils.IDataConversor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +12,20 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-@Service("apiUse")
-public class ApiUse {
-    private final String URL = "";
+@Service("apiuse")
+public class ExternalApiService {
+
+    @Autowired
     @Qualifier("dataMapper")
-    private DataMapper dataMapper;
+    private IDataConversor iDataConversor;
+    private final String URL = "https://gutendex.com/books/?search=";
 
     public String getData(String URL){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(URL))
                 .build();
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         try {
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
@@ -34,8 +37,7 @@ public class ApiUse {
 
     public DataBook apiProcessedConsuption(String bookName) {
         String json = getData(URL + bookName.replace(" ", "%20"));
-        DataBook data = dataMapper.getData(json, DataBook.class);
-        return data;
+        return iDataConversor.getData(json, DataBook.class);
     }
 
 }

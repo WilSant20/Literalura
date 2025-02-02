@@ -1,4 +1,4 @@
-package com.aluracursos.literalura.service;
+package com.aluracursos.literalura.utils;
 
 public class NameUtils {
     public String reorderName(String name) {
