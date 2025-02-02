@@ -13,7 +13,7 @@ public record DataBook(
         @JsonAlias("authors") List<DataAuthor> authors,
         @JsonAlias("subjects") List<String> subjects,
         @JsonAlias("languages") List<String> languages,
-        @JsonAlias("copyright") boolean copyright,
+        @JsonAlias("copyright") Boolean copyright,
         @JsonAlias("download_count") Integer downloadCount
 ) {
 }

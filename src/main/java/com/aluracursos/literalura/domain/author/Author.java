@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity(name = "Author")
+@Entity
 @Table(name = "authors")
 public class Author {
     @Id
@@ -19,7 +19,8 @@ public class Author {
 
     public Author() {}
 
-    public Author(DataAuthor dataAuthor) {
+    public Author(
+            DataAuthor dataAuthor) {
         this.name = dataAuthor.name();
         this.birthDate = dataAuthor.birthDate();
         this.deathDate = dataAuthor.deathDate();

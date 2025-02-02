@@ -1,4 +1,12 @@
 package com.aluracursos.literalura.repository;
 
-public interface AuthorRepository extends org.springframework.data.jpa.repository.JpaRepository<com.aluracursos.literalura.domain.author.Author, java.lang.Long> ,org.springframework.data.jpa.repository.JpaSpecificationExecutor<com.aluracursos.literalura.domain.author.Author> {
-  }
+import com.aluracursos.literalura.domain.author.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository("authorrepository")
+public interface AuthorRepository extends JpaRepository<Author, Long>{
+    Optional<Author> findByName(String name);
+}

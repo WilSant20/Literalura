@@ -3,8 +3,6 @@ package com.aluracursos.literalura.domain.book;
 import com.aluracursos.literalura.domain.author.Author;
 import jakarta.persistence.*;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,17 +15,18 @@ public class Book {
     private Long id;
     private String title;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id"))
-    @BatchSize(size = 10)
+    @BatchSize(size = 5)
     private List<Author> authors;
     @ElementCollection
     private List<String> subjects;
     @Enumerated(EnumType.STRING)
     private Languages languages;
-    private boolean copyright;
+    private Boolean copyright;
     private Integer downloadCount;
 
     public Book() {}
@@ -45,6 +44,7 @@ public class Book {
     public String getTitle() {
         return title;
     }
+
 
     public void setTitle(String title) {
         this.title = title;

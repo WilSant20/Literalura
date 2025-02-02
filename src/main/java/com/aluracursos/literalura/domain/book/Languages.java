@@ -1,6 +1,8 @@
 package com.aluracursos.literalura.domain.book;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum Languages {
     ENGLISH("en"),
@@ -10,6 +12,14 @@ public enum Languages {
     ITALIAN("it");
 
     private String apiLanguages;
+    private static Map<String, Languages> languagesMap = new HashMap<>();
+
+    static {
+        for (Languages languages : Languages.values()) {
+            languagesMap.put(languages.apiLanguages.toLowerCase(), languages);
+        }
+    }
+
 
     Languages(String apiLanguage) {
         this.apiLanguages = apiLanguage;
@@ -20,12 +30,15 @@ public enum Languages {
     }
 
     public static Languages fromString(String text) {
-        for (Languages languages : Languages.values()) {
-            if (languages.apiLanguages.equalsIgnoreCase(text.toString())) {
-                return languages;
-            }
+
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("El texto proporcionado es nulo o vacío.");
         }
-        throw new IllegalArgumentException("Ningún código de lenguaje conicide con: "+ text);
+        Languages language = languagesMap.get(text.toLowerCase());
+        if (language == null) {
+            throw new IllegalArgumentException("El lenguage no coincide con los lenguajes aceptados");
+        }
+        return language;
     }
 
 }
