@@ -14,9 +14,9 @@ public class DataMapper implements IDataConversor{
             JsonNode results = root.path("results");
             if (results.isArray() && results.size() > 0) {
                 JsonNode firstResult = results.get(0);
-                Class<T> data = objectMapper.treeToValue(firstResult, Class.class);
+                T data = objectMapper.treeToValue(firstResult, tClass);
                 System.out.println(data);
-                return (T) data;
+                return data;
             } else {
                 System.out.println("No se encontraron resultados.");
                 return null;
@@ -25,16 +25,4 @@ public class DataMapper implements IDataConversor{
             throw new RuntimeException(e);
         }
     }
-
-    //    @Override
-//    public <T> T getData(String json, Class<T> clase) {
-//        try {
-//            return objectMapper.readValue(json, clase);
-//        } catch (JsonMappingException e) {
-//            throw new RuntimeException(e);
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
 }
