@@ -1,9 +1,10 @@
-package com.aluracursos.literalura.service;
+package com.aluracursos.literalura.service.impl;
 
 import com.aluracursos.literalura.domain.author.Author;
 import com.aluracursos.literalura.domain.book.Book;
 import com.aluracursos.literalura.domain.book.Languages;
 import com.aluracursos.literalura.repository.BookRepository;
+import com.aluracursos.literalura.service.IBookDbRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@Service("dbservice")
+@Service
 @Transactional
-public class DatabaseRequestService {
+public class BookDbRequestServiceImpl implements IBookDbRequestService {
     @Autowired
     private BookRepository bookRepository;
 
@@ -63,7 +64,7 @@ public class DatabaseRequestService {
 
 
     public Page<Book> findAuthorInRange(Pageable pageable, Integer birthDate, Integer deathDate) {
-        return bookRepository.findByAuthorLife(pageable, birthDate, deathDate);
+        return bookRepository.findByAuthoralive(pageable, birthDate, deathDate);
     }
 
     public Page<Book> searchCopyright(Pageable pageable, Boolean option) {

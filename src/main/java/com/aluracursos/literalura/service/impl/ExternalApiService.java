@@ -1,6 +1,7 @@
-package com.aluracursos.literalura.service;
+package com.aluracursos.literalura.service.impl;
 
-import com.aluracursos.literalura.domain.book.DataBook;
+import com.aluracursos.literalura.domain.book.DataBookIn;
+import com.aluracursos.literalura.service.IExternalApiService;
 import com.aluracursos.literalura.utils.IDataConversor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,18 +13,17 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-@Service("apiuse")
-public class ExternalApiService {
+@Service
+public class ExternalApiService implements IExternalApiService {
 
     @Autowired
     @Qualifier("dataMapper")
     private IDataConversor iDataConversor;
-    private final String URL = "https://gutendex.com/books/?search=";
 
-    public String getData(String URL){
+    public String getData(String url){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(URL))
+                .uri(URI.create(url))
                 .build();
         HttpResponse<String> response;
         try {
@@ -35,9 +35,10 @@ public class ExternalApiService {
         return response.body();
     }
 
-    public DataBook apiProcessedConsuption(String bookName) {
+    public DataBookIn apiProcessedConsuption(String bookName) {
+        String URL = "https://gutendex.com/books/?search=";
         String json = getData(URL + bookName.replace(" ", "%20"));
-        return iDataConversor.getData(json, DataBook.class);
+        return iDataConversor.getData(json, DataBookIn.class);
     }
 
 }

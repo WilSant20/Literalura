@@ -1,12 +1,13 @@
-package com.aluracursos.literalura.service;
+package com.aluracursos.literalura.service.impl;
 
 import com.aluracursos.literalura.domain.author.Author;
 import com.aluracursos.literalura.domain.book.Book;
-import com.aluracursos.literalura.domain.book.DataBook;
+import com.aluracursos.literalura.domain.book.DataBookIn;
 import com.aluracursos.literalura.repository.AuthorRepository;
 import com.aluracursos.literalura.repository.BookRepository;
+import com.aluracursos.literalura.service.IExternalApiService;
+import com.aluracursos.literalura.service.IWebSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("web")
 @Transactional // Asegura que todas las operaciones sean atómicas
-public class WebSearchService {
+public class WebSearchService implements IWebSearchService {
 
     @Autowired
     private BookRepository bookRepository;
@@ -25,8 +26,7 @@ public class WebSearchService {
     private AuthorRepository authorRepository;
 
     @Autowired
-    @Qualifier("apiuse")
-    private ExternalApiService externalApiService;
+    private IExternalApiService externalApiService;
 
 
     /**
@@ -37,7 +37,7 @@ public class WebSearchService {
      */
     public Optional<Book> webSearchAndSave(String bookName) {
         // Consumir API y obtener los datos del libro
-        DataBook dataBook = externalApiService.apiProcessedConsuption(bookName);
+        DataBookIn dataBook = externalApiService.apiProcessedConsuption(bookName);
         if (dataBook == null) {
             return Optional.empty();
         }
@@ -65,10 +65,18 @@ public class WebSearchService {
                 authors.add(savedAuthor);
             }
         }
-
         newBook.setAuthors(authors);
+
+//        if (newBook.getSummary().length() > 254) {
+//            String summary = dataBook.summary().substring(0, 254);
+//            newBook.setSummary(summary);
+//        }
 
         Book savedBook = bookRepository.save(newBook);
         return Optional.of(savedBook);
+    }
+
+    public String setSummary(List<String> summaries) {
+        return String.join(" ", summaries);
     }
 }
