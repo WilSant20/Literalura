@@ -2,7 +2,6 @@ package com.aluracursos.literalura.domain.author;
 
 import com.aluracursos.literalura.domain.book.Book;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

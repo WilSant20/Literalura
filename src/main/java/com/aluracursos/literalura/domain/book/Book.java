@@ -15,7 +15,7 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-
+    private String summary;
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id"))
@@ -28,16 +28,19 @@ public class Book implements Serializable {
     private Boolean copyright;
     private Integer downloadCount;
 
-    public Book() {}
+    public Book() {
+    }
 
-
-    public Book(DataBook dataBook) {
-        this.title = dataBook.title();
-        this.authors = dataBook.authors().stream().map(Author::new).collect(Collectors.toList());
-        this.subjects = dataBook.subjects();
-        this.languages = Languages.fromString(dataBook.languages().stream().limit(1).collect(Collectors.joining()));
-        this.copyright = dataBook.copyright();
-        this.downloadCount = dataBook.downloadCount();
+    public Book(DataBookIn dataBookIn) {
+        this.title = dataBookIn.title();
+        String sum = dataBookIn.summary().stream().limit(1).collect(Collectors.joining());
+        this.summary = (sum != null && sum.length() >254) ? sum.substring(0, 254) :
+        sum;
+        this.authors = dataBookIn.authors().stream().map(Author::new).collect(Collectors.toList());
+        this.subjects = dataBookIn.subjects();
+        this.languages = Languages.fromString(dataBookIn.languages().stream().limit(1).collect(Collectors.joining()));
+        this.copyright = dataBookIn.copyright();
+        this.downloadCount = dataBookIn.downloadCount();
     }
 
     public Long getId() {
@@ -51,6 +54,22 @@ public class Book implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Boolean getCopyright() {
+        return copyright;
+    }
+
+    public void setCopyright(Boolean copyright) {
+        this.copyright = copyright;
     }
 
     public List<Author> getAuthors() {
@@ -98,6 +117,7 @@ public class Book implements Serializable {
         return "\n-----------------------Book----------------------\n"+
                 "\nID: " + id + "\n" +
                 "Titulo: " + title + "\n" +
+                "Sinopsis: " + summary + "\n" +
                 "Autor: " + authors + "\n" +
                 "Géneros: " + subjects + "\n" +
                 "Lenguaje: " + languages + "\n" +

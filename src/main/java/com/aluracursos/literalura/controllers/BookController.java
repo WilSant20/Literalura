@@ -1,7 +1,8 @@
 package com.aluracursos.literalura.controllers;
 
 import com.aluracursos.literalura.domain.book.Book;
-import com.aluracursos.literalura.service.DatabaseRequestService;
+import com.aluracursos.literalura.service.IBookDbRequestService;
+import com.aluracursos.literalura.service.impl.BookDbRequestServiceImpl;
 import com.aluracursos.literalura.utils.PageResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.annotations.ParameterObject;
@@ -19,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController("bookcontroller")
+@RestController("Book")
 @RequestMapping("/search/books")
 public class BookController {
 
     @Autowired
-    private DatabaseRequestService dbrequestService;
+    private IBookDbRequestService dbrequestService;
     @Autowired
     private PagedResourcesAssembler<Book> pagedResourcesAssembler;
 
